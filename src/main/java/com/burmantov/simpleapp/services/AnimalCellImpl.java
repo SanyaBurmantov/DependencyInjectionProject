@@ -1,5 +1,6 @@
 package com.burmantov.simpleapp.services;
 
+import com.burmantov.di.annotations.Bean;
 import com.burmantov.simpleapp.exceptions.WrongArgumentException;
 import com.burmantov.simpleapp.models.Cat;
 import com.burmantov.simpleapp.repositories.AnimalRepoImpl;
@@ -8,7 +9,7 @@ import java.rmi.NotBoundException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-
+@Bean
 public class AnimalCellImpl implements AnimalCell{
     private AnimalRepoImpl animalRepoImpl;
 

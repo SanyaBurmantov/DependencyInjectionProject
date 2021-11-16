@@ -1,11 +1,11 @@
 package com.burmantov.di.core;
 import com.burmantov.di.annotations.Bean;
+import com.burmantov.di.annotations.Inject;
 
 import java.lang.reflect.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+
+
 
 public final class InjectorImpl implements Injector{
     private InjectorImpl(){
@@ -25,9 +25,26 @@ public final class InjectorImpl implements Injector{
                     Container.put(anInterface, bean);
                 }
             }
+            injectAnnotationBeanProcessor();
         } catch (Throwable e){
             e.printStackTrace();
             throw new Error("FUUUUUUUUUUUCK");
+        }
+
+    }
+
+    private static void injectAnnotationBeanProcessor() throws IllegalAccessException {
+        Collection<Object> beans = Container.values();
+        for (Object bean : beans){
+            Field[] declaredFields = bean.getClass().getDeclaredFields();
+            for (Field field : declaredFields){
+                if(Objects.nonNull(field.getAnnotation(Inject.class))){
+                    field.setAccessible(true);
+                    Class<?> interfaceOfImpl = field.getType();
+                    Object dependency = getByInterface(interfaceOfImpl);
+                    field.set(bean, dependency);
+                }
+            }
         }
 
     }
@@ -49,4 +66,13 @@ public final class InjectorImpl implements Injector{
 
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> T getByInterface(Class<T> someInterface) {
+        T bean = (T) Container.get(someInterface);
+        if (Objects.isNull(bean))
+            throw new Error("Не але" + someInterface.getName());
+        return bean;
+    }
 }
+
+

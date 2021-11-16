@@ -2,10 +2,11 @@ package com.burmantov.simpleapp.repositories;
 
 
 
+import com.burmantov.di.annotations.Bean;
 import com.burmantov.simpleapp.models.Cat;
 
 import java.util.*;
-
+@Bean
 public class AnimalRepoImpl implements AnimalRepo{
     private final Map<UUID, Cat> uuidCatMap;
     public AnimalRepoImpl(){
